@@ -10,15 +10,30 @@
     <h1>Método de Bisseção</h1>
 </head>
 <body>
-    <form>
+    <form id="form">
         <div id="container">
-            <label for="Equation">Equation: </label>
+            <label for="equation">Equation: </label>
+            <div>Jeito de escrever equacao: ((x)**3)- 9*(x) +3</div>
+            <br>
             <div>
-                <input type="text" id="Equation" onblur="matthy(this)">
+                <input type="text" id="equation">
             </div>
-            <label for="result">Answer: <span id="result"></span></label>  
+            <br>
+            <label for="error">Margin Error: </label>
+            <div>
+                <input type="text" id="error">
+            </div>
+            <br>
+            <label for="result">
+                Answer: <span id="result"></span>
+            </label>  
         </div>
-        <input onclick="matthy('#Equation')" id="Calculate" type="button"  value="Calculate"> 
+        <br>
+        <input onclick="getInfo()" id="Calculate" type="button"  value="Calculate"> 
       </form>
+
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+      <canvas id="myChart" width="400" height="400"></canvas>
 </body>
 </html>

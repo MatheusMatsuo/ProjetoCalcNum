@@ -1,22 +1,24 @@
-
-function bissecao(){
+var equation = null;
+var error = null;
+//equacao test: ((x)**3)-9*(x)+3
+function getInfo() {
+  equation = document.getElementById("equation").value;
+  error = document.getElementById("error").value;
+  bissecao(equation, error)
+};
+function bissecao(f,e){
     // variaveis
-    var min = -5
-    var max = 5
-    var func = '5 + (x) - (x) ** 6';
+    var min = -10000
+    var max = 10000
+    var func = f;
     var resultado = null;
     var sinal = null;
     var sinalAnt = null;
     var resultadoAnt = null;
-    var marginErro = 0.01;
-    var intervaloF = null;
-    var intervaloS = null;
-    var intervaloM = null;
-    var extra = false;
     const intervalos =[];
-
+    const raizes = [];
     //encontrando intervalos
-    for (let i = min; i < max; i++) { 
+    for (let i = min; i <=max; i++) { 
         resultadoAnt = i-1;
         var resultado = func.replaceAll('x', i);
         sinalAnt = sinal;
@@ -31,47 +33,85 @@ function bissecao(){
             intervalos.push(resultadoAnt, i)
         }
     }
-    console.log(intervalos);
-
     //achando media/refinacao
     for (let i = 0; i < intervalos.length; i+=2) { 
-        var firstchild = intervalos[i];
-        var secondchild = intervalos[i+1];
-        var media = (firstchild + secondchild)/2;
-        var resultadoM = 1;
-        console.log('Media: '+media);
-
-        do{
-            var resultadoF = eval(func.replaceAll('x', firstchild));
-            var resultadoS = eval(func.replaceAll('x', secondchild));
-            resultadoM = eval(func.replaceAll('x', media));
- 
-            intervaloF = Math.sign(resultadoF);
-            intervaloS = Math.sign(resultadoS);    
-            intervaloM = Math.sign(resultadoM);
-            if(intervaloF == intervaloM){
-                resultadoS = eval(func.replaceAll('x', secondchild));
-                resultadoF = eval(func.replaceAll('x', media));
-                firstchild = media;
-                media = (media + secondchild)/2;
-                
-                console.log('nova media F: '+media);
-            }else if(intervaloS == intervaloM){
-                resultadoF = eval(func.replaceAll('x', firstchild));
-                resultadoS = eval(func.replaceAll('x', media));
-                secondchild = media;
-                media = (firstchild + media)/2;
-
-                console.log('nova media S: '+media);
+        var a = intervalos[i];
+        var b = intervalos[i+1];
+        var erro = e;
+        var inter = 0;
+        var media;
+        while (Math.abs(b - a) / 2 > erro) {
+            media = (a + b) / 2;
+            inter = 1;
+            console.log(media);
+      
+            if (eval(func.replaceAll('x', media)) === 0) {
+              break;
+            } else {
+              if (eval(func.replaceAll('x', a)) * eval(func.replaceAll('x', media)) < 0) {
+                b = media;
+              } else {
+                a = media;
+              }
             }
-            if(Math.abs(resultadoM) > marginErro){
-                extra = true;
-            }
-        }while (Math.abs(resultadoM) > marginErro);
-        console.log('Ultimo Intervalo:'+media);
-        console.log('Valor da equacao com o intervalo: ' + eval(func.replaceAll('x', media)));
+        }
+        raizes.push("Par de Intervalos: " + intervalos[i] +', '+ intervalos[i+1] + ' Valor do raiz deles: '+media);
     }
-//1.36114501953125
-}
+    var span = document.getElementById("result");
+    span.textContent = raizes.join('  ||  ');
 
-bissecao()
+    //GRAPH
+    beforeDraw: chart => {
+      var xAxis = chart.scales['x-axis-1'];
+      var yAxis = chart.scales['y-axis-1'];
+      const scales = chart.chart.config.options.scales;
+      scales.xAxes[0].ticks.padding = yAxis.top - yAxis.getPixelForValue(0) + 6;
+      scales.yAxes[0].ticks.padding = xAxis.getPixelForValue(0) - xAxis.right + 6;
+    };
+    
+    new Chart('myChart', {
+    type: 'scatter',
+      plugins:[{
+        beforeDraw: chart => {
+          var xAxis = chart.scales['x-axis-1'];
+          var yAxis = chart.scales['y-axis-1'];
+          const scales = chart.chart.config.options.scales;
+          scales.xAxes[0].ticks.padding = yAxis.top - yAxis.getPixelForValue(0) + 6;
+          scales.yAxes[0].ticks.padding = xAxis.getPixelForValue(0) - xAxis.right + 6;
+        }
+      }],
+      data: {
+        datasets: [{
+          label: 'Scatter Dataset',
+          data: [{x:-3,y:5},{x:-2,y:0},{x:-1,y:-3},{x:0,y:-4},{x:1,y:-3},{x:2,y:0},{x:3,y:5}],
+          borderColor: 'red'
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            ticks: {
+              min: -10000,
+              max: 10000,
+              stepSize: 1,
+              callback: v => v == 0 ? '' : v
+            },
+            gridLines: {
+              drawTicks: false
+            }        
+          }],
+          yAxes: [{
+            ticks: {
+              min: -10000,
+              max: 10000,
+              stepSize: 1,
+              callback: v => v == 0 ? '' : v
+            },
+            gridLines: {
+              drawTicks: false
+            } 
+          }]
+        }
+      }
+    });
+}
