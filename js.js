@@ -39,6 +39,8 @@ function bissecao(f,e){
         var erro = e;
         var inter = 0;
         var media;
+
+        erro = erro.replaceAll(',' , '.');
         while (Math.abs(b - a) / 2 > erro) {
             media = (a + b) / 2;
             inter = 1;    
