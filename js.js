@@ -23,7 +23,6 @@ function bissecao(f,e){
         var resultado = func.replaceAll('x', i);
         sinalAnt = sinal;
         resultado = eval(resultado);
-        console.log(resultado);
         if(resultado >0){
             sinal = '+'
         }else if(resultado <0){
@@ -42,9 +41,7 @@ function bissecao(f,e){
         var media;
         while (Math.abs(b - a) / 2 > erro) {
             media = (a + b) / 2;
-            inter = 1;
-            console.log(media);
-      
+            inter = 1;    
             if (eval(func.replaceAll('x', media)) === 0) {
               break;
             } else {
@@ -60,15 +57,7 @@ function bissecao(f,e){
     var span = document.getElementById("result");
     span.textContent = raizes.join('  ||  ');
 
-    //GRAPH
-    beforeDraw: chart => {
-      var xAxis = chart.scales['x-axis-1'];
-      var yAxis = chart.scales['y-axis-1'];
-      const scales = chart.chart.config.options.scales;
-      scales.xAxes[0].ticks.padding = yAxis.top - yAxis.getPixelForValue(0) + 6;
-      scales.yAxes[0].ticks.padding = xAxis.getPixelForValue(0) - xAxis.right + 6;
-    };
-    
+    //GRAPH    
     new Chart('myChart', {
     type: 'scatter',
       plugins:[{
